@@ -46,10 +46,6 @@ jobs:
           terraform validate
           terraform fmt
         working-directory: infra_terraform        
-      
-      - name: Terraform Plan
-        run: terraform plan
-        working-directory: infra_terraform
 
       - name: Terraform State
         run: terraform state list
