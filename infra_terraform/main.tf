@@ -1,7 +1,7 @@
 
 # Define AWS as the provider with the specified region.
 provider "aws" {
-  region = var.region # Use the region specified in the variable "region".
+  region = "us-east-1"
 }
 
 # Create an AWS VPC with the specified CIDR block and tags.
@@ -21,20 +21,6 @@ resource "aws_internet_gateway" "demo_igw" {
   vpc_id = var.create_vpc ? aws_vpc.demo_main_vpc[0].id : null
   tags = {
     Name = "${var.project_tag}-igw"
-  }
-}
-
-# Private hosted zone
-resource "aws_route53_zone" "private" {
-  count = var.create_route53 ? 1 : 0
-  name  = "davidawcloudsecurity.com"
-  
-  vpc {
-    vpc_id = var.create_vpc ? aws_vpc.demo_main_vpc[0].id : data.aws_vpc.existing[0].id
-  }
-  
-  tags = {
-    Name = "${var.project_tag}-private-zone"
   }
 }
 
