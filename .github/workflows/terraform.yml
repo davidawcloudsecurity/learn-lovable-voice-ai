@@ -1,12 +1,14 @@
 # This is a basic workflow to help you get started with Actions
-name: learn-aws-patch-manager-destroy
+name: learn-sonic-voice-ai-destroy
 
 on:
   workflow_dispatch:
 
 env:
   AWS_REGION : "us-east-1" #Change to reflect your Region
-
+  IAM_ROLE_NAME: "demo-project-ec2-role"
+  IAM_PROFILE_NAME: "demo-project-ec2-profile"
+  
 # Permission can be added at job level or workflow level    
 permissions:
       id-token: write   # This is required for requesting the JWT
@@ -56,12 +58,10 @@ jobs:
       - name: Terraform Destroy Targeted Resources
         run: |
           terraform destroy -auto-approve -input=false
-          if [ -n "$(aws iam list-roles --query 'Roles[*].RoleName' | grep AmazonSSMManagedInstanceRole | sed 's/[",]//g')" ]; then
-            aws iam delete-role --role-name "$(aws iam list-roles --query 'Roles[*].RoleName' | grep AmazonSSMManagedInstanceRole | sed 's/[",]//g')"
-          fi
-          if [ -n "$(aws iam list-instance-profiles --query InstanceProfiles[*].InstanceProfileName | grep AmazonSSMManagedInstanceProfile | sed 's/[",]//g')" ]; then
-            aws iam delete-instance-profile --instance-profile-name "$(aws iam list-instance-profiles --query InstanceProfiles[*].InstanceProfileName | grep AmazonSSMManagedInstanceProfile | sed 's/[",]//g')"
-          fi          
+          echo "Cleaning up any existing IAM resources..."
+          aws iam remove-role-from-instance-profile --instance-profile-name ${{ env.IAM_PROFILE_NAME }} --role-name ${{ env.IAM_ROLE_NAME }} 2>/dev/null || true
+          aws iam delete-instance-profile --instance-profile-name ${{ env.IAM_PROFILE_NAME }} 2>/dev/null || true
+          aws iam delete-role --role-name ${{ env.IAM_ROLE_NAME }} 2>/dev/null || true  
         working-directory: infra_terraform
 
       - name: Clean tfstate and Git
