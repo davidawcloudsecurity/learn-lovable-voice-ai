@@ -60,7 +60,8 @@ jobs:
           else
               echo "Role doesn't exist - will create new"
               terraform apply --auto-approve -var="use_existing_iam=false"
-          fi        working-directory: infra_terraform
+          fi
+        working-directory: infra_terraform
 
       - name: Git Config
         run: |
