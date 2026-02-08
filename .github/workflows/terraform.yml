@@ -100,7 +100,7 @@ jobs:
       - name: Terraform Destroy on Failure
         if: failure()
         run: |
-          terraform destroy -auto-approve -input=false
+          # terraform destroy -auto-approve -input=false
           # Force cleanup any remaining IAM resources that Terraform might have missed
           aws iam delete-role --role-name ${{ env.IAM_ROLE_NAME }} 2>/dev/null || true
           aws iam delete-instance-profile --instance-profile-name ${{ env.IAM_PROFILE_NAME }} 2>/dev/null || true
