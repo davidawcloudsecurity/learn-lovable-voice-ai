@@ -211,7 +211,6 @@ resource "aws_instance" "backend" {
 
   user_data = <<-EOF
               #!/bin/bash
-              useradd -m -s /bin/bash ssm-user
               apt-get update
               apt-get install -y ca-certificates curl
               install -m 0755 -d /etc/apt/keyrings
