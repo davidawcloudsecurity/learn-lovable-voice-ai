@@ -244,7 +244,7 @@ resource "aws_instance" "frontend" {
               groupadd docker
               usermod -aG docker ubuntu
               docker run hello-world
-              cd /home/ssm-user
+              cd /opt
               git clone -b amazon-aio https://ghproxy.cn/https://github.com/chen188/Astra.ai
               cd Astra.ai
               cp ./.env.example ./.env
